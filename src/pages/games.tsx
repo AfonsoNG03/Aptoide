@@ -1,23 +1,15 @@
 import React, { useState } from "react";
 import { useQuery, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-
-/*
-• Data Retrieval
-o Fetch game details dynamically using the API endpoint: https://ws2-cache.aptoide.com/api/7/getApp?package_name=[package_name]
-o The [package_name] parameter in the URL should be dynamic, allowing for different games to be displayed by changing the query string
-(e.g., https://localhost:3000?package_name=cm.aptoide.pt).
-o Fetch data for similar apps using the API endpoint:
-https://ws2-cache.aptoide.com/api/7/listApps?offset=0&limit=9&sort=trending60d&origin=SITE&store_name=aptoide-web&store_id=15
-
-*/
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const baseUrl = "https://ws2-cache.aptoide.com/api/7/getApp?package_name=";
 
 interface GameDetails {
     name: string;
-    description: string;
     icon: string;
+    media?: {
+        screenshots?: Array<{ url: string }>;
+    };
 }
 
 const queryClient = new QueryClient();
@@ -29,8 +21,11 @@ function FetchExample() {
         queryKey: ["gameDetails", { packageName }],
         queryFn: async () => {
             const response = await fetch(baseUrl + packageName);
-            return (await response.json()) as GameDetails;
+            const json = await response.json();
+            console.log("Fetched data:", json);
+            return json.nodes?.meta?.data as GameDetails;
         },
+        staleTime: 5 * 60 * 1000
     });
 
     return (
@@ -43,7 +38,22 @@ function FetchExample() {
             ) : (
                 <div>
                     <h2>{gameDetails.name}</h2>
-                    <p>{gameDetails.description}</p>
+                    <img src={gameDetails.icon} alt={`${gameDetails.name} icon`} width={50} height={50} />
+                    <div>
+                        {gameDetails.media?.screenshots?.length ? (
+                            gameDetails.media.screenshots.map((screenshot, index) => (
+                                <img
+                                    key={index}
+                                    src={screenshot.url}
+                                    alt={`${gameDetails.name} screenshot ${index + 1}`}
+                                    width={150}
+                                    style={{ margin: "10px" }}
+                                />
+                            ))
+                        ) : (
+                            <p>No screenshots available</p>
+                        )}
+                    </div>
                 </div>
             )}
         </div>
@@ -54,6 +64,7 @@ export default function Games() {
     return (
         <QueryClientProvider client={queryClient}>
             <FetchExample />
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
 }
