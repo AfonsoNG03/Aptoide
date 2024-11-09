@@ -7,7 +7,12 @@ const baseUrl = "https://ws2-cache.aptoide.com/api/7/getApp?package_name=";
 export interface GameDetails {
     name: string;
     icon: string;
+    package: string;
+    file: {
+        path: string;
+    };
     media?: {
+        description: string;
         screenshots?: Array<{ url: string }>;
     };
 }
@@ -22,7 +27,7 @@ function FetchGameDetails() {
         queryFn: async () => {
             const response = await fetch(baseUrl + packageName);
             const json = await response.json();
-            //console.log("Fetched data:", json);
+            console.log("Fetched data:", json);
             return json.nodes?.meta?.data as GameDetails;
         },
         staleTime: 5 * 60 * 1000
@@ -38,7 +43,10 @@ function FetchGameDetails() {
             ) : (
                 <div>
                     <h2>{gameDetails.name}</h2>
-                    <img src={gameDetails.icon} alt={`${gameDetails.name} icon`} width={50} height={50} />
+                    <img src={gameDetails.icon} alt={`${gameDetails.name} icon`} width={150} />
+                    <a href={gameDetails.file.path} download>
+                        <button>Download</button>
+                    </a>
                     <div>
                         {gameDetails.media?.screenshots?.length ? (
                             gameDetails.media.screenshots.map((screenshot, index) => (
@@ -54,6 +62,7 @@ function FetchGameDetails() {
                             <p>No screenshots available</p>
                         )}
                     </div>
+                    <p>{gameDetails.media?.description}</p>
                 </div>
             )}
         </div>

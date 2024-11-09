@@ -14,7 +14,7 @@ function FetchSimilarGames() {
         queryFn: async () => {
             const response = await fetch(baseUrl);
             const json = await response.json();
-            console.log("Fetched data:", json);
+            //console.log("Fetched data:", json);
             return json.datalist?.list as GameDetails[];
         },
         staleTime: 5 * 60 * 1000
