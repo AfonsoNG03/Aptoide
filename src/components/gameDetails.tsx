@@ -19,51 +19,58 @@ export interface GameDetails {
 
 const queryClient = new QueryClient();
 
-function FetchGameDetails() {
-    const [packageName, setPackageName] = useState("cm.aptoide.pt");
-
-    const { data: gameDetails, isError, isPending } = useQuery({
-        queryKey: ["gameDetails", { packageName }],
+function useGameDetails(packageName: string) {
+    return useQuery({
+        queryKey: ["gameDetails", packageName],
         queryFn: async () => {
             const response = await fetch(baseUrl + packageName);
+            if (!response.ok) {
+                throw new Error("Failed to fetch game details");
+            }
             const json = await response.json();
-            console.log("Fetched data:", json);
             return json.nodes?.meta?.data as GameDetails;
         },
-        staleTime: 5 * 60 * 1000
+        staleTime: 5 * 60 * 1000,
     });
+}
+
+function GameDetailsView() {
+    const [packageName, setPackageName] = useState("cm.aptoide.pt");
+    const { data: gameDetails, isError, isLoading, error } = useGameDetails(packageName);
 
     return (
         <div>
             <h1>Game Details</h1>
-            {isPending ? (
+            {isLoading ? (
                 <div>Loading...</div>
             ) : isError ? (
-                <div>Error fetching data</div>
+                <div>Error: {(error as Error).message}</div>
             ) : (
-                <div>
-                    <h2>{gameDetails.name}</h2>
-                    <img src={gameDetails.icon} alt={`${gameDetails.name} icon`} width={150} />
-                    <a href={gameDetails.file.path} download>
-                        <button>Download</button>
-                    </a>
+                gameDetails && (
                     <div>
-                        {gameDetails.media?.screenshots?.length ? (
-                            gameDetails.media.screenshots.map((screenshot, index) => (
-                                <img
-                                    key={index}
-                                    src={screenshot.url}
-                                    alt={`${gameDetails.name} screenshot ${index + 1}`}
-                                    width={150}
-                                    style={{ margin: "10px" }}
-                                />
-                            ))
-                        ) : (
-                            <p>No screenshots available</p>
-                        )}
+                        <h2>{gameDetails.name}</h2>
+                        <img src={gameDetails.icon} alt={`${gameDetails.name} icon`} width={150} />
+                        <a href={gameDetails.file.path} download>
+                            <button>Download</button>
+                        </a>
+                        <div>
+                            {gameDetails.media?.screenshots?.length ? (
+                                gameDetails.media.screenshots.map((screenshot, index) => (
+                                    <img
+                                        key={index}
+                                        src={screenshot.url}
+                                        alt={`${gameDetails.name} screenshot ${index + 1}`}
+                                        width={150}
+                                        className="screenshot"
+                                    />
+                                ))
+                            ) : (
+                                <p>No screenshots available</p>
+                            )}
+                        </div>
+                        <p>{gameDetails.media?.description}</p>
                     </div>
-                    <p>{gameDetails.media?.description}</p>
-                </div>
+                )
             )}
         </div>
     );
@@ -72,7 +79,8 @@ function FetchGameDetails() {
 export default function Games() {
     return (
         <QueryClientProvider client={queryClient}>
-            <FetchGameDetails />
+            <GameDetailsView />
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
 }
