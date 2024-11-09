@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const baseUrl = "https://ws2-cache.aptoide.com/api/7/getApp?package_name=";
 
-interface GameDetails {
+export interface GameDetails {
     name: string;
     icon: string;
     media?: {
@@ -14,7 +14,7 @@ interface GameDetails {
 
 const queryClient = new QueryClient();
 
-function FetchExample() {
+function FetchGameDetails() {
     const [packageName, setPackageName] = useState("cm.aptoide.pt");
 
     const { data: gameDetails, isError, isPending } = useQuery({
@@ -22,7 +22,7 @@ function FetchExample() {
         queryFn: async () => {
             const response = await fetch(baseUrl + packageName);
             const json = await response.json();
-            console.log("Fetched data:", json);
+            //console.log("Fetched data:", json);
             return json.nodes?.meta?.data as GameDetails;
         },
         staleTime: 5 * 60 * 1000
@@ -63,8 +63,7 @@ function FetchExample() {
 export default function Games() {
     return (
         <QueryClientProvider client={queryClient}>
-            <FetchExample />
-            <ReactQueryDevtools initialIsOpen={false} />
+            <FetchGameDetails />
         </QueryClientProvider>
     );
 }

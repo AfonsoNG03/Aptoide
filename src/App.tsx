@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
-import Games from './pages/games';
+import Games from './components/gameDetails';
+import SimilarGames from './components/similarGame';
 import './App.css';
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Games />
+        <SimilarGames />
       </header>
     </div>
   );
