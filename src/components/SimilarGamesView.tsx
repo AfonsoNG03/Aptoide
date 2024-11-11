@@ -9,21 +9,27 @@ function SimilarGamesView({ onSelectGame }: { onSelectGame: (packageName: string
     return (
         <div>
             <h1>Similar Games</h1>
-            {similarGames?.length ? (
-                similarGames.map((game, index) => (
-                    <div
-                        key={index}
-                        className="game-item"
-                        onClick={() => onSelectGame(game.package)}
-                        style={{ cursor: "pointer" }}
-                    >
-                        <h2>{game.name}</h2>
-                        <img src={game.icon} alt={`${game.name} icon`} width={150} className="game-icon" />
-                    </div>
-                ))
-            ) : (
-                <p>No similar games available</p>
-            )}
+            <div className="wrapper">
+                <div className="image-slider">
+                    {similarGames?.length ? (
+                        similarGames.map((game, index) => (
+                            <div
+                                key={index}
+                                className="item"
+                                onClick={() => onSelectGame(game.package)}
+                                style={{ cursor: "pointer" }}
+                            >
+
+                                <img src={game.icon} alt={`${game.name} icon`} width={150} />
+                                <p>{game.name}</p>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No similar games available</p>
+                    )}
+                </div>
+            </div>
+
         </div>
     );
 }

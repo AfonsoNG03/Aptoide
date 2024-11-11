@@ -1,16 +1,7 @@
 .App {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  overflow-x: hidden;
+  width: 100%;
 }
 
 .App-header {
@@ -24,15 +15,133 @@
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.wrapper {
+  display: flex;
+  width: 100vw;
+  padding: 20px;
+  scroll-behavior: smooth;
+  overflow-x: scroll;
+  justify-content: flex-start;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.wrapper.centered {
+  justify-content: center;
+}
+
+.image-slider {
+  display: flex;
+  gap: 10px;
+}
+
+.image-slider img {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+
+.button {
+  margin-top: 30px;
+  background-color: #FFA500;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: #de7b01;
+}
+
+.image-slider-2 {
+  display: flex;
+  gap: 10px;
+}
+
+.image-slider-2 img {
+  width: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.container {
+  margin-left: 5%;
+  margin-right: 5%;
+  width: 90%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-height: 4em;
+  transition: max-height 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.description.expanded {
+  max-height: 1000em;
+}
+
+.wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.expanded-screenshot {
+  position: relative;
+}
+
+.expanded-screenshot img {
+  max-width: 45%;
+  max-height: 45%;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 10%;
+  width: 60px;
+  height: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: rgba(255, 255, 255, 1);
 }
