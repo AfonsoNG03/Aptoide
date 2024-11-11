@@ -5,7 +5,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #131518;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -30,6 +30,7 @@
 
 .image-slider {
   display: flex;
+  padding-left: 15px;
   gap: 10px;
 }
 
@@ -67,6 +68,7 @@
 .image-slider-2 {
   display: flex;
   gap: 10px;
+  padding-left: 15px;
 }
 
 .image-slider-2 img {

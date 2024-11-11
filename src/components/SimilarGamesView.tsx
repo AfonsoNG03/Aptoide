@@ -15,7 +15,6 @@ function SimilarGamesView({ onSelectGame }: { onSelectGame: (packageName: string
                         similarGames.map((game, index) => (
                             <div
                                 key={index}
-                                className="item"
                                 onClick={() => onSelectGame(game.package)}
                                 style={{ cursor: "pointer" }}
                             >

@@ -1,38 +1,15 @@
-import { useGameDetails } from "../hooks/useGameDetails";
-import { useState, useEffect, useRef } from 'react';
+import { useGameDetails, useDescriptionToggle, useCenteredSlider } from "../hooks/useGameDetails";
+import { useState} from 'react';
 
 function GameDetailsView({ packageName }: { packageName: string }) {
     const { data: gameDetails, isError, isLoading, error } = useGameDetails(packageName);
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [isTruncatable, setIsTruncatable] = useState(false);
-    const descriptionRef = useRef<HTMLParagraphElement>(null);
-    const [isCentered, setIsCentered] = useState(true);
-    const sliderRef = useRef<HTMLParagraphElement>(null);
+    const { isExpanded, isTruncatable, toggleDescription, descriptionRef } = useDescriptionToggle(gameDetails?.media?.description);
+    const { isCentered, sliderRef } = useCenteredSlider();
     const [expandedScreenshot, setExpandedScreenshot] = useState<{ url: string; index: number } | null>(null);
 
-    useEffect(() => {
-        if (descriptionRef.current) {
-            descriptionRef.current.style.maxHeight = '4em';
-            setIsTruncatable(descriptionRef.current.scrollHeight > descriptionRef.current.clientHeight);
-            descriptionRef.current.style.maxHeight = '';
-        }
-    }, [gameDetails?.media?.description]);
-
-    useEffect(() => {
-        const updateAlignment = () => {
-          if (sliderRef.current) {
-            setIsCentered(sliderRef.current.clientWidth < window.innerWidth);
-          }
-        };
-        updateAlignment();
-        window.addEventListener('resize', updateAlignment);
-        return () => window.removeEventListener('resize', updateAlignment);
-    }, []);
 
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error: {(error as Error).message}</div>;
-
-    const toggleDescription = () => setIsExpanded((prev) => !prev);
 
     const handleScreenshotClick = (url: string, index: number) => {
         setExpandedScreenshot({ url, index });
@@ -57,11 +34,11 @@ function GameDetailsView({ packageName }: { packageName: string }) {
                         <div className={`wrapper ${isCentered ? 'centered' : ''}`}>
                             <div className="image-slider-2" ref={sliderRef}>
                                 {gameDetails.media.screenshots.map((screenshot, index) => (
-                                    <div key={index} className="item">
-                                        <img 
-                                            src={screenshot.url} 
-                                            alt={`${gameDetails.name} screenshot ${index + 1}`} 
-                                            width={150} 
+                                    <div key={index}>
+                                        <img
+                                            src={screenshot.url}
+                                            alt={`${gameDetails.name} screenshot ${index + 1}`}
+                                            width={150}
                                             onClick={() => handleScreenshotClick(screenshot.url, index)}
                                             style={{ cursor: 'pointer' }}
                                         />

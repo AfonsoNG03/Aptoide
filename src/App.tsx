@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import GameDetailsView from './components/GameDetailsView';
 import SimilarGamesView from './components/SimilarGamesView';
 import './App.css';
@@ -18,7 +17,6 @@ function App() {
           <SimilarGamesView onSelectGame={setSelectedPackage} />
         </header>
       </div>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }
